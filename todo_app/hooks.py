@@ -199,3 +199,5 @@ app_license = "n"
 # auth_hooks = [
 #	"todo_app.auth.validate"
 # ]
+
+website_route_rules = [{'from_route': '/frontend/<path:app_path>', 'to_route': 'frontend'},]
