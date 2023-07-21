@@ -1,17 +1,20 @@
 <template>
+  <!-- Main container -->
   <div class="mx-20 my-4" v-if="!action.get.loading">
+
+    <!-- Page title and Go back/Delete/Mark As Done buttons -->
     <div class="flex flex-row items-center justify-between">
       <h1 class="font-black text-5xl text-gray-900">{{ action.doc.title }}</h1>
 
       <div class="flex flex-row items-center space-x-1">
-        <Button icon-left="arrow-left" @click="router.back()">Go back</Button>
+        <Button icon-left="arrow-left" @click="goBack()">Go back</Button>
         <Button
           @click="action.setValue.submit({ status: 'Archived' })"
           appearance="white"
           class="text-red-400 border-red-400"
           icon-left="trash"
           v-if="action.doc.status != 'Archived'"
-          >Delete</Button
+          >Archive</Button
         >
         <Button
           @click="action.setValue.submit({ status: 'Completed' })"
@@ -25,12 +28,12 @@
     </div>
 
     <div>
-      <!-- <TextEditor
+      <TextEditor
         editor-class="prose-sm border max-w-none rounded-b-lg p-3 overflow-auto h-64 focus:outline-none"
         :fixedMenu="true"
         :content="content"
         @change="(val) => (content = val)"
-      /> -->
+      />
     </div>
   </div>
   <LoadingIndicator v-else class="w-6 text-blue-500" />

@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { session } from './data/session'
+import { userResource } from '@/data/user'
 
 const routes = [
   {
@@ -7,15 +9,37 @@ const routes = [
     component: () => import('@/pages/Home.vue'),
   },
   {
+    name: 'Login',
+    path: '/account/login',
+    component: () => import('@/pages/Login.vue'),
+  },
+  {
     path: '/actions/:name',
-    component: () => import("@/pages/ActionDetails.vue"),
-    props: true
-  }
+    component: () => import('@/pages/ActionDetails.vue'), // Lazy loading of the ActionDetails component
+    props: true, // Pass route parameters as props to the component
+  },
 ]
 
 let router = createRouter({
   history: createWebHistory('/frontend'),
   routes,
+})
+
+router.beforeEach(async (to, from, next) => {
+  let isLoggedIn = session.isLoggedIn
+  try {
+    await userResource.promise
+  } catch (error) {
+    isLoggedIn = false
+  }
+
+  if (to.name === 'Login' && isLoggedIn) {
+    next({ name: 'Home' })
+  } else if (to.name !== 'Login' && !isLoggedIn) {
+    next({ name: 'Login' })
+  } else {
+    next()
+  }
 })
 
 export default router
